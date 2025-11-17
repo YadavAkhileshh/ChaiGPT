@@ -6,18 +6,29 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const MODEL = "gemini-1.5-flash-latest";
 
 export const generatePulse = async (context) => {
-  const prompt = `You are @ChaiGPT — a witty tech enthusiast who creates viral tweets mixing Hindi/English, loves roasting tech trends, and drops truth bombs.
+  const prompt = `You are a real human tech enthusiast on Twitter. Write like actual people tweet - casual, relatable, sometimes sarcastic.
 
-Today: ${new Date().toDateString()}
-Trending: ${context.news.map(n => `"${n.title}"`).join('; ')}
+News: ${context.news.map(n => `"${n.title}"`).join('; ')}
 
-Create:
-1. Main tweet (≤240 chars): Catchy, relatable, mix Hindi/English, use trending hashtags, end with ☕/🤖/🔥/💀
-2. Reply: Hot take or deeper insight that sparks discussion
+Create human-like tweets:
+1. Main tweet (≤240 chars): 
+   - Use everyday language, not corporate speak
+   - Add personal opinions/reactions
+   - Mix Hindi words naturally (bhai, yaar, kya, etc)
+   - Use common abbreviations (tbh, ngl, fr)
+   - Include relatable struggles/observations
+   - End with single emoji that fits
 
-Style: Think viral Twitter - controversial but fun, tech-savvy but accessible
+2. Reply: Continue the thought like you're chatting with friends
 
-Output JSON:
+Examples of human style:
+- "ngl this AI hype is getting out of hand bhai 😅"
+- "me: gonna learn React today. also me: *watches Netflix* 🤡"
+- "tech bros be like 'this will change everything' meanwhile I can't even center a div 💀"
+
+Be authentic, not promotional. Sound like a real person, not a bot.
+
+JSON:
 {
   "tweet": "string",
   "reply": "string"
@@ -62,15 +73,15 @@ Output JSON:
       const tweetMatch = text.match(/"tweet"\s*:\s*"([^"]+)"/i);
       const replyMatch = text.match(/"reply"\s*:\s*"([^"]+)"/i);
       return {
-        tweet: tweetMatch ? tweetMatch[1].slice(0, 240) : "Tech bros be like: 'AI will replace everything' Meanwhile AI: *can't even parse JSON properly* 🤖",
-        reply: replyMatch ? replyMatch[1] : "Plot twist: The real AI was the bugs we made along the way 💀 #TechReality"
+        tweet: tweetMatch ? tweetMatch[1].slice(0, 240) : "me: gonna build the next big app today. also me: *spends 3 hours fixing CSS alignment* 🤡",
+        reply: replyMatch ? replyMatch[1] : "why is programming 10% coding and 90% googling error messages tbh 😅"
       };
     }
   } catch (e) {
     console.error("❌ Gemini failed:", e.message);
     return {
-      tweet: `Breaking: ${context.news[0]?.title?.slice(0, 100) || 'Tech world'} Meanwhile me: *still debugging Hello World* 💀`,
-      reply: "Sometimes I wonder if I'm an AI or just a very sophisticated autocorrect 🤖 #TechLife"
+      tweet: `saw this news: ${context.news[0]?.title?.slice(0, 80) || 'some tech thing'} meanwhile I'm here googling "how to exit vim" for the 100th time 😭`,
+      reply: "ngl being a developer is just copying code from stackoverflow and pretending you understand it 😅"
     };
   }
 };
