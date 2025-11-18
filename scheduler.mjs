@@ -1,10 +1,10 @@
 import 'dotenv/config';
+import { createServer } from 'http';
 import { getUSTrends, postTweet, postReply } from './utils/twitter.js';
 import { generatePulse } from './utils/gemini.js';
 import { fetchHNTop, fetchTechNews } from './utils/data-sources.js';
 
 async function runPulse() {
-  console.log(`⚡ [${new Date().toLocaleString()}] Starting BolAI Pulse...`);
 
   let trends = ["AI", "Tech"];
   let hn = [];
@@ -15,7 +15,7 @@ async function runPulse() {
     hn = await fetchHNTop(3);
     news = await fetchTechNews();
   } catch (e) {
-    console.warn("⚠️ Using fallback data");
+    console.warn(" Using fallback data");
   }
 
   const context = { trends, hn, news };
@@ -32,6 +32,17 @@ async function runPulse() {
 
 //  Run every 4 hours
 const INTERVAL = 4 * 60 * 60 * 1000; 
+
+// Simple HTTP server for Render
+const server = createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('ChaiGPT Bot is running!');
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(` Server running on port ${PORT}`);
+});
 
 runPulse(); 
 setInterval(runPulse, INTERVAL);
